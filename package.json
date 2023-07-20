@@ -1,0 +1,19 @@
+{
+  "name": "directory-sync",
+  "version": "1.0.0",
+  "description": "Directory Sync service for KAMAR",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/noahball/directory-sync.git"
+  },
+  "author": "Noah Ball",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/noahball/directory-sync/issues"
+  },
+  "homepage": "https://github.com/noahball/directory-sync#readme"
+}
