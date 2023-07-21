@@ -60,7 +60,7 @@ app.post('/sync', (req, res) => {
                     "learningsupport": false,
                     "fields": {
                         "required": "uniqueid;firstname;lastname;gender;genderpreferred;username;email;house;yearlevel;tutor",
-                        "optional": "nsn;firstnamelegal;lastnamelegal;forenames;forenameslegal;gendercode;timetablebottom1;timetablebottom2;timetablebottom3;timetablebottom4;timetabletop1;timetabletop2;timetabletop3;timetabletop4"
+                        "optional": "firstnamelegal;lastnamelegal;forenames;forenameslegal;gendercode;timetablebottom1;timetablebottom2;timetablebottom3;timetablebottom4;timetabletop1;timetabletop2;timetabletop3;timetabletop4"
                         }
                     },
                 "staff": {
