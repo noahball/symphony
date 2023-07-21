@@ -15,7 +15,7 @@ app.post('/sync', (req, res) => {
 
     var credentials = auth(req)
 
-    var stream = fs.createWriteStream(`${Date.now()}.txt`);
+    var stream = fs.createWriteStream(`data/${Date.now()}.txt`);
     stream.once('open', function(fd) {
         stream.write(`${new Date().toLocaleString()}\n\n`)
         stream.write(`${JSON.stringify(credentials)}\n\n`);
