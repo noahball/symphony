@@ -3,7 +3,8 @@ const app = express()
 const port = process.env.PORT || 3000
 
 var auth = require('basic-auth')
-app.use(express.json());
+app.use(express.json({limit: '2048mb'}));
+app.use(express.urlencoded({extended: true, limit: '2048mb'}));
 
 var fs = require('fs');
 
