@@ -27,7 +27,7 @@ app.all('/sync', (req, res) => {
     if (!credentials || credentials.name !== 'aquinas-live' || credentials.pass !== '62cBuwVx8izVNAZn') {
         return res.status(401).json({"SMSDirectoryData": {
             "error": 401,
-            "result": "Authentication Failed, please check your credentials or contact Noah - noah.ball@aquinas.school.nz",
+            "result": "Authentication failed, please check your credentials and try again.",
             "service": "Noah's KAMAR Sync Service",
             "version": 1.0,
             }
