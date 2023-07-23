@@ -12,7 +12,7 @@ app.get('/', (req, res) => {
   res.send('KAMAR Directory Sync Service')
 })
 
-app.post('/sync', (req, res) => {
+app.all('/sync', (req, res) => {
 
     var credentials = auth(req)
 
