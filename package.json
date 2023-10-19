@@ -1,21 +1,21 @@
 {
-  "name": "directory-sync",
+  "name": "symphony",
   "version": "1.0.0",
-  "description": "Directory Sync service for KAMAR",
+  "description": "Dynamically sync KAMAR class lists with Google Classroom.",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/noahball/directory-sync.git"
+    "url": "git+https://github.com/noahball/symphony.git"
   },
   "author": "Noah Ball",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/noahball/directory-sync/issues"
+    "url": "https://github.com/noahball/symphony/issues"
   },
-  "homepage": "https://github.com/noahball/directory-sync#readme",
+  "homepage": "https://github.com/noahball/symphony#readme",
   "dependencies": {
     "basic-auth": "^2.0.1",
     "express": "^4.18.2"
