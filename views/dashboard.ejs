@@ -1,0 +1,34 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@1/css/pico.min.css">
+    <title>Dashboard | Symphony</title>
+  </head>
+  <body>
+    <main class="container">
+      <h1>Generated Classes</h1>
+      <table role="grid">
+        <thead>
+            <tr>
+              <th scope="col">Class Name</th>
+              <th scope="col">Teacher</th>
+              <th scope="col">No. Students</th>
+              <th scope="col">Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            <% for (const [key, value] of Object.entries(classData)) { // For each class %>
+            <tr>
+                <td><%= key // Class name and line (title) %></td>
+                <td><%= value.teacher // Class teacher %></td>
+                <td><%= value.students.length // Total number of students in students array %></td>
+                <td><a href="/manage?class=<%= key // URL to manage students %>"><b>Manage</b></a></td>
+              </tr>
+            <% } %>
+          </tbody>
+      </table>
+    </main>
+  </body>
+</html>

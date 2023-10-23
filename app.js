@@ -22,7 +22,7 @@ const dashboard = require('./routes/dashboard')
 const sync = require('./routes/sync')
 
 // Dashboard endpoint
-// app.use('/', dashboard)
+app.use('/', dashboard)
 
 // Sync - KAMAR's sync endpoint
 app.use('/sync', sync)
