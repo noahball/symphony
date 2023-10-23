@@ -90,6 +90,37 @@ app.all('/sync', (req, res) => {
                 }
             }
         })
+    } else if (req.body.SMSDirectoryData.sync == "studenttimetables") {
+        var classData = {};
+        for (var i = 0; i < req.body.SMSDirectoryData.timetables.data.length; i++) { // For each student
+            for (var j = 0; j < req.body.SMSDirectoryData.timetables.data[i].timetable.length; j++) { // For each week
+                for (var k = 0; k < req.body.SMSDirectoryData.timetables.data[i].timetable[j].days.length; k++) { // For each day
+                    for (var l = 0; l < req.body.SMSDirectoryData.timetables.data[i].timetable[j].days[k].slots.length; l++) { // For each slot
+                        var objStr = JSON.stringify(req.body.SMSDirectoryData.timetables.data[i].timetable[j].days[k].slots[l][0]); // Class data for this period
+                        if (objStr) { // If there is a class this period (eg. not a break)
+                            var obj = JSON.parse(objStr); // Parse the class data
+                            // console.log(obj)
+                            if (obj.option) { // If it's an option class
+                                if (!classData[`${obj.code} (${obj.option})`]) { // If we haven't seen this class before
+                                    classData[`${obj.code} (${obj.option})`] = []; // Create an array for it
+                                }
+                                if (!classData[`${obj.code} (${obj.option})`].includes(req.body.SMSDirectoryData.timetables.data[i].student)) { // If this student isn't already in the class list for this class
+                                    classData[`${obj.code} (${obj.option})`].push(req.body.SMSDirectoryData.timetables.data[i].student); // Add them
+                                }
+                            } else if (obj.core) { // If it's a core class
+                                if (!classData[`${obj.code} (${obj.core})`]) { // If we haven't seen this class before
+                                    classData[`${obj.code} (${obj.core})`] = []; // Create an array for it
+                                }
+                                if (!classData[`${obj.code} (${obj.core})`].includes(req.body.SMSDirectoryData.timetables.data[i].student)) { // If this student isn't already in the class list for this class
+                                    classData[`${obj.code} (${obj.core})`].push(req.body.SMSDirectoryData.timetables.data[i].student); // Add them
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        console.log(classData)
     }
 
     console.log("Synced at " + new Date().toLocaleString()) // Log that we've received a request other than check
