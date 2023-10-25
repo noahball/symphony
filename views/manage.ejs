@@ -1,0 +1,29 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@1/css/pico.min.css">
+    <title>Manage <%= classShort %> | Symphony</title>
+  </head>
+  <body>
+    <main class="container">
+      <h1 style="margin-bottom: 0"><%= classData.code %> (<%= classData.line %>)</h1>
+      <p>With <%= classData.teacher %></p>
+      <table role="grid" style="width: 50%;">
+        <thead>
+            <tr>
+              <th scope="col">Student Name</th>
+            </tr>
+          </thead>
+          <tbody>
+            <% for (let i = 0; i < classData.students.length; i++) { %>
+              <tr>
+                <td><%= classData.students[i] %></td>
+              </tr>
+            <% } %>
+          </tbody>
+      </table>
+    </main>
+  </body>
+</html>
