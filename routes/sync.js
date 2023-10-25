@@ -2,8 +2,9 @@ const express = require("express");
 const router = express.Router();
 const auth = require('basic-auth')
 const fs = require('fs');
+const client = require("../helpers/redis.js");
 
-router.all("/", function (req, res) {
+router.all("/", async function (req, res) {
     var credentials = auth(req) // Grab credentials from request
 
     var stream = fs.createWriteStream(`data/${Date.now()}.txt`); // Log the request to a timestamped file
@@ -24,6 +25,8 @@ router.all("/", function (req, res) {
             }
         })
     }
+
+    console.log(req.body)
 
     if (req.body.SMSDirectoryData.sync == "check") { // Check request handling
         console.log("Check request received at " + new Date().toLocaleString()) // Log that we've received a request
@@ -73,7 +76,13 @@ router.all("/", function (req, res) {
             }
         })
     } else if (req.body.SMSDirectoryData.sync == "studenttimetables") {
-        var classData = {};
+        var classStr = await client.get("classData"); // Get the class data from Redis
+        if (!classStr) { // If there is no class data
+            var classData = {}; // Create an empty object
+        } else {
+            var classData = JSON.parse(classStr); // Parse the class data
+        }
+
         for (var i = 0; i < req.body.SMSDirectoryData.timetables.data.length; i++) { // For each student
             for (var j = 0; j < req.body.SMSDirectoryData.timetables.data[i].timetable.length; j++) { // For each week
                 for (var k = 0; k < req.body.SMSDirectoryData.timetables.data[i].timetable[j].days.length; k++) { // For each day
@@ -103,6 +112,7 @@ router.all("/", function (req, res) {
             }
         }
         console.log(classData)
+        client.set("classData", JSON.stringify(classData));
     }
 
     console.log("Synced at " + new Date().toLocaleString()) // Log that we've received a request other than check
