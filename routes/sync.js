@@ -113,6 +113,19 @@ router.all("/", async function (req, res) {
         }
         console.log(classData)
         client.set("classData", JSON.stringify(classData));
+    } else if (req.body.SMSDirectoryData.sync == "full") {
+        var studentsStr = await client.get("studentData"); // Get the student data from Redis
+        if (!studentsStr) { // If there is no class data
+            var studentsData = {}; // Create an empty object
+        } else {
+            var studentsData = JSON.parse(studentsStr); // Parse the student data
+        }
+
+        for (var i = 0; i < req.body.SMSDirectoryData.students.data.length; i++) { // For each student
+            studentsData[req.body.SMSDirectoryData.students.data[i].id] = { id: req.body.SMSDirectoryData.students.data[i].id, name: `${req.body.SMSDirectoryData.students.data[i].firstname} ${req.body.SMSDirectoryData.students.data[i].lastname}`, email: req.body.SMSDirectoryData.students.data[i].email}; // Add them to the student data
+        }
+
+        client.set("studentsData", JSON.stringify(studentsData));
     }
 
     console.log("Synced at " + new Date().toLocaleString()) // Log that we've received a request other than check
