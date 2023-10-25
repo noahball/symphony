@@ -114,7 +114,10 @@ router.all("/", async function (req, res) {
         console.log(classData)
         client.set("classData", JSON.stringify(classData));
     } else if (req.body.SMSDirectoryData.sync == "full") {
-        var studentsStr = await client.get("studentData"); // Get the student data from Redis
+
+        // Generate list of students in Redis
+
+        var studentsStr = await client.get("studentsData"); // Get the student data from Redis
         if (!studentsStr) { // If there is no class data
             var studentsData = {}; // Create an empty object
         } else {
@@ -126,6 +129,21 @@ router.all("/", async function (req, res) {
         }
 
         client.set("studentsData", JSON.stringify(studentsData));
+
+        // Generate list of teachers in Redis
+
+        var teachersStr = await client.get("teachersData"); // Get the teacher data from Redis
+        if (!teachersStr) { // If there is no class data
+            var teachersData = {}; // Create an empty object
+        } else {
+            var teachersData = JSON.parse(teachersStr); // Parse the teacher data
+        }
+
+        for (var i = 0; i < req.body.SMSDirectoryData.staff.data.length; i++) { // For each teacher
+            teachersData[req.body.SMSDirectoryData.staff.data[i].id] = { id: req.body.SMSDirectoryData.staff.data[i].id, name: `${req.body.SMSDirectoryData.staff.data[i].title} ${req.body.SMSDirectoryData.staff.data[i].firstname} ${req.body.SMSDirectoryData.staff.data[i].lastname}`, email: req.body.SMSDirectoryData.staff.data[i].email}; // Add them to the teacher data
+        }
+
+        client.set("teachersData", JSON.stringify(teachersData));
     }
 
     console.log("Synced at " + new Date().toLocaleString()) // Log that we've received a request other than check
