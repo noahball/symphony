@@ -144,6 +144,23 @@ router.all("/", async function (req, res) {
         }
 
         client.set("teachersData", JSON.stringify(teachersData));
+
+        // Generate list of subjects in Redis
+
+        var subjectsStr = await client.get("subjectsData"); // Get the subject data from Redis
+        if (!subjectsStr) { // If there is no class data
+            var subjectsData = {}; // Create an empty object
+        } else {
+            var subjectsData = JSON.parse(subjectsStr); // Parse the subject data
+        }
+
+        for (var i = 0; i < req.body.SMSDirectoryData.subjects.data.length; i++) { // For each subject
+            subjectsData[req.body.SMSDirectoryData.subjects.data[i].id.toString()] = { id: req.body.SMSDirectoryData.subjects.data[i].id, name: req.body.SMSDirectoryData.subjects.data[i].name}; // Add them to the subject data
+        }
+
+        console.log(JSON.stringify(subjectsData))
+
+        client.set("subjectsData", JSON.stringify(subjectsData));
     }
 
     console.log("Synced at " + new Date().toLocaleString()) // Log that we've received a request other than check
