@@ -113,17 +113,75 @@ router.get('/manage/exclude-subject', async function (req, res) {
     var exclSubjects = JSON.parse(exclSubjectsStr); // Parse the subject data
   }
 
+  // Class data from Redis
   const classStr = await client.get("classData");
   const classData = JSON.parse(classStr);
 
+  // Find the subject code for the class provided
   const subjectCode = classData[req.query.subject].code;
 
-  if (!exclSubjects.subjects.includes(subjectCode)) {
-    exclSubjects.subjects.push(subjectCode);
-    client.set("exclSubjects", JSON.stringify(exclSubjects));
+  if (!exclSubjects.subjects.includes(subjectCode)) { // If the subject hasn't already been excluded
+    exclSubjects.subjects.push(subjectCode); // Add it to the list of excluded subjects
+    client.set("exclSubjects", JSON.stringify(exclSubjects)); // Save the new excluded subjects object to Redis
   }
 
-  res.redirect('/manage?class=' + req.query.subject)
+  res.redirect('/manage?class=' + req.query.subject) // Redirect back to the class management page
+})
+
+// Push to Google Classroom
+router.get('/push', async function (req, res) {
+
+  // Import classroom module
+  const classroom = google.classroom({version: 'v1', auth});
+
+  // Get the class data from Redis
+  const classStr = await client.get("classData");
+  const classData = JSON.parse(classStr);
+
+  // Get student data from Redis
+  const studentsStr = await client.get("studentsData");
+  const studentsData = JSON.parse(studentsStr);
+
+  // Get teacher data from Redis
+  const teachersStr = await client.get("teachersData");
+  const teachersData = JSON.parse(teachersStr);
+
+  // Get subject data from Redis
+  const subjectsStr = await client.get("subjectsData");
+  const subjectsData = JSON.parse(subjectsStr);
+
+  // Get the excluded classes data from Redis
+  const exclClassesStr = await client.get("exclClasses");
+  var exclClasses = JSON.parse(exclClassesStr);
+
+  // Get the excluded subjects data from Redis
+  const exclSubjectsStr = await client.get("exclSubjects");
+  var exclSubjects = JSON.parse(exclSubjectsStr);
+
+  for (const [key, value] of Object.entries(classData)) { // For each class
+    if (!exclClasses.names.includes(key) && !exclSubjects.subjects.includes(value.code)) { // If the class isn't excluded or has an excluded subject code
+      var res = await classroom.courses.create({ // Create the class
+        name: `${subjectsData[classData[key].code].name} (${classData[key].line}) with ${teachersData[classData[key].teacher].name} `, // "eg. Year 12 Mathematics with Calculus (3) with Mr F Graham"
+        ownerId: teachersData[classData[key].teacher].email, // Set teacher as owner
+        courseState: "PROVISIONED" // Set course state to provisioned (available)
+      })
+
+      var courseId = res.data.id; // Get the ID of the created course
+
+      var res = await classroom.courses.teachers.create({ // Add the teacher as a teacher
+        courseId: courseId, // Use course ID
+        userId: teachersData[classData[key].teacher].email // Use teacher email
+      })
+
+      for (var i = 0; i < classData[key].students.length; i++) { // For each student in this class
+        var res = await classroom.courses.students.create({ // Add them to the classroom
+          courseId: courseId,
+          userId: studentsData[classData[key].students[i]].email // Student's email
+        })
+      }
+
+    }
+  }
 })
 
 module.exports = router;
