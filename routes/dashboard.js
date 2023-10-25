@@ -34,8 +34,15 @@ router.get('/manage', async function (req, res) {
 
   // Substitute subject and teacher codes for names
 
-  classData[req.query.class].code = subjectsData[ classData[req.query.class].code].name;
-  classData[req.query.class].teacher = teachersData[classData[req.query.class].teacher].name;
+  console.log(classData[req.query.class])
+
+  // Some classes don't have a teacher or code, prevent crashes and log error if they don't
+  try {
+    classData[req.query.class].code = subjectsData[classData[req.query.class].code].name;
+    classData[req.query.class].teacher = teachersData[classData[req.query.class].teacher].name;
+  } catch (err) {
+    console.log(err)
+  }
 
   // Substitute student IDs for names
 
