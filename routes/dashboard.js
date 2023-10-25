@@ -7,11 +7,31 @@ const client = require("../helpers/redis.js");
 router.get('/', async function (req, res) {
   
     // Get the class data from Redis
-    const classData = await client.get("classData");
+    const classDataStr = await client.get("classData");
+    const classData = JSON.parse(classDataStr);
 
+    // Get the excluded classes data from Redis
+    const exclClassesStr = await client.get("exclClasses");
+    const exclClasses = JSON.parse(exclClassesStr);
+
+    // Get the excluded subjects data from Redis
+    const exclSubjectsStr = await client.get("exclSubjects");
+    const exclSubjects = JSON.parse(exclSubjectsStr);
+
+    // Mark any excluded classes/subjects as excluded
+    for (const [key, value] of Object.entries(classData)) {
+      if (exclClasses.names.includes(key)) {
+        classData[key].excluded = true;
+      } else if (exclSubjects.subjects.includes(value.code)) {
+        classData[key].excluded = true;
+      } else {
+        classData[key].excluded = false;
+      }
+    }
+    
     // Render the dashboard using EJS
     res.render('dashboard', {
-        classData: JSON.parse(classData) || {} // Pass the class data to the EJS rendering engine for the dashboard
+        classData: classData || {} // Pass the class data to the EJS rendering engine for the dashboard
     })
   });
 

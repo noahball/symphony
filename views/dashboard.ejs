@@ -15,15 +15,18 @@
               <th scope="col">Class Name</th>
               <th scope="col">Teacher</th>
               <th scope="col">No. Students</th>
+              <th scope="col">Excluded from Classroom</th>
               <th scope="col">Actions</th>
             </tr>
           </thead>
           <tbody>
             <% for (const [key, value] of Object.entries(classData)) { // For each class %>
+              <% if (value.excluded) { var excluded = "Yes" } else { var excluded = "No" } %>
             <tr>
                 <td><%= key // Class name and line (title) %></td>
                 <td><%= value.teacher // Class teacher %></td>
                 <td><%= value.students.length // Total number of students in students array %></td>
+                <td><%= excluded %></td>
                 <td><a href="/manage?class=<%= key // URL to manage students %>"><b>Manage</b></a></td>
               </tr>
             <% } %>
