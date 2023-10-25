@@ -14,7 +14,8 @@
   </head>
   <body>
     <main class="container">
-      <h1 style="margin-bottom: 0"><%= classData.code %> (<%= classData.line %>)</h1>
+      <a href="/"><p style="margin-bottom: 1rem">Go Back</p></a>
+      <h1 style="margin-bottom: 0; margin-top: 0"><%= classData.code %> (<%= classData.line %>)</h1>
       <p>With <%= classData.teacher %></p>
       <div>
         <a href="/manage/exclude-class?class=<%= classShort %>"><button style="float: left; margin-right: 1rem">Exclude this class from Classroom</button></a>

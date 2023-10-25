@@ -8,7 +8,8 @@
   </head>
   <body>
     <main class="container">
-      <h1>Generated Classes</h1>
+      <h1 style="margin-bottom: 1rem">Generated Classes</h1>
+      <a data-target="modal-push" onClick="toggleModal(event)"><p style="margin-top: 0"><i><b>Push to Google Classroom</b></i></p></a>
       <table role="grid">
         <thead>
             <tr>
@@ -32,6 +33,37 @@
             <% } %>
           </tbody>
       </table>
+
+      <dialog id="modal-push">
+        <article>
+          <a href="#close"
+            aria-label="Close"
+            class="close"
+            data-target="modal-push"
+            onClick="toggleModal(event)">
+          </a>
+          <h3>Confirm push to Google Classroom</h3>
+          <p>
+            A classroom will be created for each class, and students will be added to each classroom. Classrooms will not be created for classes and subjects marked as excluded. <u>This action is irreversible!</u>
+          </p>
+          <footer>
+            <a href="#cancel"
+              role="button"
+              class="secondary"
+              data-target="modal-push"
+              onClick="toggleModal(event)">
+              Cancel
+            </a>
+            <a href="/push"
+              role="button"
+              data-target="modal-push">
+              Confirm
+            </a>
+          </footer>
+        </article>
+      </dialog>
     </main>
+
+    <script src="/modal.js"></script>
   </body>
 </html>
