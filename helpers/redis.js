@@ -1,6 +1,6 @@
 const redis = require("redis");
 
-let redisClient = redis.createClient({
+let redisClient = redis.createClient({ // Create new Redis client
     socket: {
       port: process.env.REDIS_PORT,
       host: process.env.REDIS_HOST,
